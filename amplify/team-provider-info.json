@@ -1,0 +1,41 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-velpa-dev-194314-authRole",
+      "UnauthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpa-dev-194314-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::832832547198:role/amplify-velpa-dev-194314-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-velpa-dev-194314-deployment",
+      "UnauthRoleName": "amplify-velpa-dev-194314-unauthRole",
+      "StackName": "amplify-velpa-dev-194314",
+      "StackId": "arn:aws:cloudformation:us-east-1:832832547198:stack/amplify-velpa-dev-194314/fcc96a50-8fbe-11ed-a0f1-0ef4df76b393",
+      "AmplifyAppId": "d3buf6mwwdyqrk"
+    },
+    "categories": {
+      "auth": {
+        "velpaAuth": {}
+      },
+      "function": {
+        "AdminQueries3476a37b": {
+          "deploymentBucketName": "amplify-velpa-dev-194314-deployment",
+          "s3Key": "amplify-builds/AdminQueries3476a37b-45354d335955614e5062-build.zip"
+        },
+        "CreatePaymentIntent": {
+          "deploymentBucketName": "amplify-velpa-dev-194314-deployment",
+          "s3Key": "amplify-builds/CreatePaymentIntent-473349426853624f696d-build.zip"
+        },
+        "CreateStripeAccount": {
+          "deploymentBucketName": "amplify-velpa-dev-194314-deployment",
+          "s3Key": "amplify-builds/CreateStripeAccount-6f51577665317a613237-build.zip"
+        },
+        "preSignUp": {
+          "deploymentBucketName": "amplify-velpa-dev-194314-deployment",
+          "s3Key": "amplify-builds/preSignUp-782b306d36596c653430-build.zip"
+        }
+      },
+      "storage": {
+        "storage": {}
+      }
+    }
+  }
+}

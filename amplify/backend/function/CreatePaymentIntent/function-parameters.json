@@ -1,0 +1,16 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "stripeKey",
+      "environmentVariableName": "STRIPE_KEY"
+    }
+  ],
+  "permissions": {
+    "api": {
+      "velpaAPI": [
+        "Mutation"
+      ]
+    }
+  }
+}

@@ -1,0 +1,524 @@
+type Aventura
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  titulo: String!
+
+  imagenFondoIdx: Int!
+  imagenDetalle: [String]!
+
+  precioMin: Float
+  precioMax: Float
+
+  duracion: String
+  descripcion: String
+  dificultad: Float
+
+  ubicacionNombre: String!
+  ubicacionId: String!
+  ubicacionLink: String
+  coordenadas: AWSJSON!
+
+  estadoAventura: EstadoAventura!
+  altitud: Float
+  distanciaRecorrida: Float
+  altimetriaRecorrida: Float
+  categoria: Categorias
+
+  materialDefault: String
+  incluidoDefault: [String]
+
+  usuarioID: String
+
+  SolicitudGuias: [SolicitudGuia]
+    @manyToMany(relationName: "AventuraSolicitudGuias")
+
+  UsuariosAutorizados: [Usuario] @manyToMany(relationName: "AventuraUsuarios")
+
+  Fechas: [Fecha] @hasMany(indexName: "byAventura", fields: ["id"])
+}
+
+type Reserva
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  total: Float!
+  comision: Float!
+  pagadoAlGuia: Float!
+
+  tercera: Int!
+  ninos: Int!
+  adultos: Int!
+  pagoID: String
+
+  ingreso: Boolean
+  horaIngreso: AWSDateTime
+
+  cancelado: Boolean
+  canceledAt: AWSDateTime
+  cancelReason: reservaCancelReason
+
+  fechaID: ID @index(name: "byFecha")
+  usuarioID: ID @index(name: "byUsuario")
+
+  guiaID: ID
+
+  tipoPago: tipoPago
+
+  materialChecked: String
+
+  comisionID: ID
+  comisionAsociada: Comision @hasOne
+}
+
+type Fecha
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  personasTotales: Int!
+
+  fechaInicial: AWSTimestamp!
+  fechaFinal: AWSTimestamp!
+  precio: Float!
+  comision: Float!
+  experienciaPorPersona: Int
+
+  itinerario: String!
+
+  puntoReunionNombre: String!
+  puntoReunionId: String
+  puntoReunionLink: String
+  puntoReunionCoords: String
+
+  allowTercera: Boolean!
+  allowNinos: Boolean!
+  efectivo: Boolean!
+
+  material: String
+  incluido: String!
+  titulo: String
+  descripcion: String
+  imagenRuta: String
+
+  imagenFondo: String
+  tituloAventura: String
+
+  cancelado: Boolean
+  canceledAt: AWSDateTime
+
+  dateModified: Boolean
+
+  aventuraID: ID! @index(name: "byAventura")
+  aventuraFechasId: ID
+
+  usuarioID: ID! @index(name: "byUsuario")
+
+  dificultad: Int
+
+  Reservas: [Reserva] @hasMany(indexName: "byFecha", fields: ["id"])
+  ChatRoom: [ChatRoom] @hasMany(indexName: "byFecha", fields: ["id"])
+}
+
+type Usuario
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  tipo: TipoUsuario
+  guia: Boolean
+
+  email: String
+
+  calificacion: Float
+  numResenas: Int
+
+  nombre: String
+  apellido: String
+
+  foto: String
+  imagenFondo: String
+  nickname: String
+
+  # Nivel del usuario
+  experience: Int
+
+  stripeID: String
+
+  admin: Boolean
+
+  selfie: String
+  ID: [String]
+  certificaciones: [String]
+
+  telefono: String
+  sitioWeb: AWSURL
+
+  CuentaBancaria: String
+
+  fechaNacimiento: AWSJSON
+  direccion: AWSJSON
+
+  rfcIndividual: String
+  rfcCompania: String
+
+  capacidadMaxima: Int
+  comentariosAdicionales: String
+
+  notificationToken: String
+
+  newMessages: Int
+
+  AventurasAutorizadas: [Aventura] @manyToMany(relationName: "AventuraUsuarios")
+
+  Mensajes: [Mensaje] @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  ChatRooms: [ChatRoomUsuarios] @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  Reservas: [Reserva] @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  Fechas: [Fecha] @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  Notificaciones: [Notificacion]
+    @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  SolicitudesCreadas: [SolicitudGuia]
+    @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  Comentarios: [Comentario] @hasMany(indexName: "byUsuario", fields: ["id"])
+
+  Comisiones: [Comision] @hasMany(indexName: "byUsuario", fields: ["id"])
+}
+
+type Comision
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  amount: Int!
+
+  editing: Boolean
+  startEditingAt: AWSTimestamp
+  payed: Boolean
+
+  pagadoEnReservaID: ID
+
+  reservaID: ID
+
+  # Si fue una cancelacion de fecha
+  fechaID: ID
+
+  usuarioID: ID @index(name: "byUsuario")
+}
+
+type ChatRoom
+  @model
+  @auth(
+    rules: [{ allow: public, operations: [create, read, update, delete] }]
+  ) {
+  id: ID!
+
+  name: String!
+  picture: String
+  lastMessage: Mensaje @hasOne
+
+  fechaID: ID @index(name: "byFecha")
+  guiaID: ID
+
+  Mensajes: [Mensaje] @hasMany(indexName: "byChatRoom", fields: ["id"])
+
+  Participantes: [ChatRoomUsuarios]
+    @hasMany(indexName: "byChatRoom", fields: ["id"])
+}
+
+type Mensaje
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  content: String!
+  usuarioID: ID @index(name: "byUsuario")
+  chatroomID: ID @index(name: "byChatRoom")
+}
+
+type SolicitudGuia
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  status: StatusSolicitud!
+  evaluadorID: ID
+  usuarioID: ID @index(name: "byUsuario")
+  mensaje: String
+  Aventuras: [Aventura] @manyToMany(relationName: "AventuraSolicitudGuias")
+}
+
+type Notificacion
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  tipo: TipoNotificacion!
+  titulo: String!
+  descripcion: String
+  usuarioID: ID! @index(name: "byUsuario")
+
+  imagen: String
+
+  leido: Boolean
+  showAt: AWSTimestamp
+
+  reservaID: ID
+  fechaID: ID
+  aventuraID: ID
+  guiaID: ID
+  solicitudGuiaID: ID
+}
+
+type Comentario
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  usuarioCalificadoID: ID! @index(name: "byUsuario")
+  body: String
+  calificacion: Float!
+
+  creatorID: ID
+}
+
+type Publicidad
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+
+  tipo: TipoPublicidad!
+
+  titulo: String!
+  descripcion: String
+  imagenFondo: String!
+  video: String
+  linkAnuncio: String
+
+  aventuraID: ID
+}
+
+enum EstadoAventura {
+  AUTORIZADO
+  PENDIENTE
+  RECHAZADO
+}
+
+enum TipoNotificacion {
+  RESERVAENFECHA
+  RESERVACREADA
+
+  RECORDATORIOFECHA
+
+  SOLICITUDGUIAAPROVADA
+  SOLICITUDGUIARECHAZADA
+  SOLICITUDGUIA
+
+  SOLICITUDAVENTURAAPROVADA
+  SOLICITUDAVENTURARECHAZADA
+  SOLICITUDAVENTURA
+
+  ADMIN
+  BIENVENIDA
+  FECHACREADA
+
+  FECHAACTUALIZACION
+  FECHACANCELADA
+  RESERVACANCELADA
+
+  CALIFICAUSUARIO
+}
+
+enum TipoPublicidad {
+  AVENTURA
+  ANUNCIO
+  ACTUALIZACION
+}
+
+enum Categorias {
+  ALPINISMO
+  CICLISMO
+  MOTO
+  SKI
+  SURF
+  OTROS
+}
+
+enum StatusSolicitud {
+  APROVADA
+  PENDIENTE
+  RECHAZADA
+}
+
+enum TipoUsuario {
+  AGENCIA
+  GUIAINDIVIDUAL
+}
+########################################################
+###################TABLAS MANY TO MANY##################
+########################################################
+type ChatRoomUsuarios
+  @model
+  @auth(
+    rules: [
+      { allow: public, operations: [create, read, update, delete] }
+      { allow: public, provider: iam }
+    ]
+  ) {
+  id: ID!
+  usuario: Usuario @belongsTo(fields: ["usuarioID"])
+  chatroom: ChatRoom @belongsTo(fields: ["chatroomID"])
+
+  chatroomID: ID! @index(name: "byChatRoom")
+  usuarioID: ID! @index(name: "byUsuario")
+  newMessages: Int
+}
+
+########################################################
+########################FUNCIONES#######################
+########################################################
+type Mutation {
+  createPaymentIntent(
+    amount: Float!
+    destinationStripeID: String!
+    comision: Float!
+
+    # Parametro para pasar un JSON parsed si el usuario debe comisiones de efectivo
+    otherFees: String
+
+    fechaID: String!
+    usuarioID: String!
+    reservaID: String!
+
+    description: String
+    email: String
+  ): PaymentIntent! @function(name: "CreatePaymentIntent-${env}")
+
+  createStripeAccount(
+    email: AWSEmail!
+    phone: AWSPhone!
+
+    first_name: String!
+    last_name: String!
+
+    # Cuenta bancaria
+    accountNumber: String!
+
+    # Sub usuario
+    userSub: ID!
+
+    # Imagenes de verificacion
+    documentIdBack: String!
+    documentIdFront: String!
+
+    # Fecha nacimiento
+    day: Int!
+    month: Int!
+    year: Int!
+
+    # Adress
+    city: String!
+    country: String!
+    line1: String!
+    postal_code: Int!
+    state: String!
+
+    # Terms of service agree
+    ip: AWSIPAddress!
+    date: AWSTimestamp!
+
+    # Datos si es compañia
+    companyName: String
+    url: AWSURL
+
+    # Cuenta individual o de compañia
+    accountType: AccountType!
+
+    # RFC infdividual que se agregara al perfil del dueño si se especifican varios
+    rfcIndividual: String
+    rfcCompania: String
+  ): CreateAcountResponse @function(name: "CreateStripeAccount-${env}")
+}
+
+enum AccountType {
+  INDIVIDUAL
+  COMPANY
+}
+
+enum tipoPago {
+  EFECTIVO
+  TARJETA
+}
+
+enum reservaCancelReason {
+  FECHACERRADA
+  CANCELADOPORCLIENTE
+}
+
+type PaymentIntent {
+  id: String
+  clientSecret: String
+  error: String
+}
+
+type CreateAcountResponse {
+  id: String
+  errors: Boolean
+}
