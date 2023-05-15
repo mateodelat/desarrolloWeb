@@ -17,7 +17,7 @@ async function cargarReservas() {
 
     reservas.map(async reserva => {
       const personasTotales = reserva.adultos + reserva.ninos + reserva.tercera
-      const { id, total, fechaID } = reserva
+      const { id, total, fechaID, aventuraID } = reserva
 
 
       // Ir agregando los datos que ya cargaron
@@ -38,8 +38,8 @@ async function cargarReservas() {
                   </div>
               </div>
           </div>
-      </div>
-    </div>`
+        </div>
+      </div>`
 
       document.getElementById("reservas").insertAdjacentHTML('beforeend', html);
 
@@ -72,7 +72,7 @@ async function cargarReservas() {
 
       html = `<div id=${id}>
       <div class="card">
-          <img class="card-img-top w-100 d-block fit-cover" style="height: 200px;"
+          <img href="detalleAventura+?aventuraID=${aventuraID} class="card-img-top w-100 d-block fit-cover" style="height: 200px;"
               src="${imagenFondo}">
           <div class="card-body p-4">
               <h4 class="card-title" style="font-family: 'Kaushan Script', serif;">${tituloAventura}</h4>
@@ -90,7 +90,7 @@ async function cargarReservas() {
       </div>
     </div>`
 
-      document.getElementById("reservas").innerHTML = html
+      document.getElementById(id).innerHTML = html
 
 
 
@@ -104,29 +104,3 @@ async function cargarReservas() {
 }
 
 cargarReservas();
-
-
-async function fetchFromAPI(route, method, body) {
-
-  method = method ? method : "POST"
-
-  // Mandar solicitud al server
-  const requestOptions = {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: body ? JSON.stringify(body) : undefined
-  };
-
-  return await fetch("http://localhost:8080/" + route, requestOptions)
-    .then(r => r.json())
-    .then(data => {
-      // Si tenemos error mostrar la alerta 
-      if (data.error) {
-
-        throw new Error(data.error)
-      }
-      return data
-    })
-
-
-}

@@ -389,8 +389,27 @@ export const getFecha = /* GraphQL */ `
       usuarioID
       dificultad
       Reservas {
-        nextToken
-        startedAt
+        items {
+          id
+          total
+          comision
+          pagadoAlGuia
+          tercera
+          ninos
+          adultos
+          pagoID
+          ingreso
+          horaIngreso
+          cancelado
+          canceledAt
+          cancelReason
+          fechaID
+          usuarioID
+          guiaID
+          tipoPago
+          materialChecked
+          comisionID
+        }      
       }
       ChatRoom {
         nextToken
@@ -442,6 +461,29 @@ export const listFechas = /* GraphQL */ `
         usuarioID
         dificultad
         createdAt
+        Reservas {
+          items {
+            id
+            total
+            comision
+            pagadoAlGuia
+            tercera
+            ninos
+            adultos
+            pagoID
+            ingreso
+            horaIngreso
+            cancelado
+            canceledAt
+            cancelReason
+            fechaID
+            usuarioID
+            guiaID
+            tipoPago
+            materialChecked
+            comisionID
+          }      
+        }
         updatedAt
         _version
         _deleted

@@ -92,11 +92,18 @@ function crearDivMapa(aventura) {
 
 }
 
+function navigateFechas() {
+
+  window.location.href = "fechasAventura.html" + window.location.search
+
+}
+
 function cargarDatosRecorrido(objeto) {
   document.getElementById("DatosCarousel").insertAdjacentHTML('beforeend', crearDivDatosRecorrido(objeto));
   document.getElementById("descripcion").innerText = objeto.descripcion;
   document.getElementById("tituloAventura").innerText = objeto.titulo
   document.getElementById("mapaAventura").insertAdjacentHTML("beforeend", crearDivMapa(objeto))
+  document.getElementById("reservar").onclick = navigateFechas
 
 }
 

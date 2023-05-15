@@ -1,7 +1,8 @@
 const express = require('express');
 
-const { DataStore } = require('aws-amplify');
+const { DataStore, API, graphqlOperation } = require('aws-amplify');
 const { Aventura, Fecha } = require('../models');
+const { getFecha, listFechas } = require('../graphql/queries');
 
 
 
@@ -11,16 +12,22 @@ const fechaRouter = express.Router();
 // Obtener todas las fechas de una aventura
 fechaRouter.get('/', async (req, res) => {
     try {
-        const { aventuraID } = req.query
+        let response = await API.graphql(graphqlOperation(listFechas))
 
-        if (!aventuraID) {
-            throw new Error("Error, no se recibio el search param de aventuraID")
+        response = response.data.listFechas.items
+
+
+        if (response) {
+            response = response.map(r => {
+                return {
+                    ...r,
+                    Reservas: r.Reservas?.items
+                }
+            })
+
         }
 
-
-        let data = await DataStore.query(Fecha, f => f.aventuraID.eq(aventuraID))
-
-        res.json(data);
+        res.status(200).json(response);
     } catch (error) {
         console.log(error.message)
 
@@ -34,9 +41,20 @@ fechaRouter.get('/', async (req, res) => {
 fechaRouter.get('/:id', async (req, res) => {
     try {
         const { id } = req.params
-        let product = await DataStore.query(Fecha, id)
 
-        res.status(200).json(product);
+        let response = await API.graphql(graphqlOperation(getFecha, { id }))
+
+        response = response.data.getFecha
+
+        if (response) {
+            response = {
+                ...response,
+                Reservas: response.Reservas?.items
+            }
+
+        }
+
+        res.status(200).json(response);
     } catch (error) {
         console.log(error.message)
 
