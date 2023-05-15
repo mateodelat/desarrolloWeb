@@ -1,12 +1,18 @@
 async function getUserInfo() {
+
     const token = localStorage.getItem("token")
 
     if (!token) {
         alert("El usuario no esta autenticado")
+        localStorage.removeItem("token")
     }
     else {
-        const usuario = await fetchFromAuth("user?token=" + token, "GET")
-        console.log(usuario)
+        const usuario = await fetchFromAuth("user?token=" + token, "GET").catch(e => {
+            console.log(e.message)
+            // Si el token no es valido, mandar alerta
+            throw new Error("Error, tu sesion ha expirado")
+        })
+        return usuario
     }
 
 }
