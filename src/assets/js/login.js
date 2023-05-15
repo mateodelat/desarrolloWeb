@@ -28,7 +28,7 @@ document.getElementById("enviar").addEventListener("click", async function (even
             alert("Inicio de sesion exitoso")
 
 
-            goBack()
+            history.back()
         })
         .catch(e => e)
         .finally(() => {
@@ -39,16 +39,6 @@ document.getElementById("enviar").addEventListener("click", async function (even
 
         })
 });
-
-// Funcion para ir atras en las pantallas de login o registrarse a partir de el parametro from ingresado en la url
-function goBack() {
-    // Ir atras
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const prevWindow = urlSearchParams.get('from');
-
-    window.location.search = ""
-    window.location.pathname = prevWindow ? prevWindow : "index.html";
-}
 
 async function fetchFromAuth(route, method, body) {
 

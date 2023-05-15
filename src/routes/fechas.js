@@ -24,7 +24,7 @@ fechaRouter.get('/', async (req, res) => {
     } catch (error) {
         console.log(error.message)
 
-        res.status(404).send(`${error.message}`)
+        res.status(404).send({ error: `${error.message}` })
     }
 
 });
@@ -40,7 +40,7 @@ fechaRouter.get('/:id', async (req, res) => {
     } catch (error) {
         console.log(error.message)
 
-        res.status(404).send(`${error.message}`)
+        res.status(404).send({ error: `${error.message}` })
     }
 
 });

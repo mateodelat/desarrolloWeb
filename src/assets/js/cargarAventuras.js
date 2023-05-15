@@ -34,6 +34,3 @@ function crearDivCards(objeto) {
 }
 
 
-
-// Verificar estado del usuario si el token es valido
-getUserInfo()

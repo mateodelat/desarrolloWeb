@@ -181,7 +181,7 @@ authRouter.get('/user', async (req, res) => {
     } catch (error) {
         console.log(error)
 
-        res.status(404).send(`${error.message}`)
+        res.status(404).send({ error: `${error.message}` })
     }
 
 });
@@ -230,7 +230,7 @@ authRouter.get('/signOut', async (req, res) => {
     } catch (error) {
         console.log(error)
 
-        res.status(404).send(`${error.message}`)
+        res.status(404).send({ error: `${error.message}` })
     }
 
 });
