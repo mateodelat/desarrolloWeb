@@ -1,10 +1,9 @@
 async function cargarAventuras() {
-  const data = await fetch("http://localhost:8080/aventura").then(r => r.json())
+  const aventuras = await fetch("http://localhost:8080/aventura").then(r => r.json())
 
-  console.log(data)
 
-  for (let i = 0; i < data.length; i++) {
-    document.getElementById("AquiCARDS").insertAdjacentHTML('beforeend', crearDivCards(data[i]));
+  for (let i = 0; i < aventuras.length; i++) {
+    document.getElementById("AquiCARDS").insertAdjacentHTML('beforeend', crearDivCards(aventuras[i]));
   }
 }
 
@@ -35,3 +34,6 @@ function crearDivCards(objeto) {
 }
 
 
+
+// Verificar estado del usuario si el token es valido
+getUserInfo()

@@ -1,11 +1,9 @@
 async function loadAll() {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const idAventura = urlSearchParams.get('id');
-  console.log(idAventura)
 
   const aventura = await fetch("http://localhost:8080/aventura/" + idAventura).then(r => r.json())
 
-  console.log(aventura)
 
   if (!aventura) {
     alert("Error, no se encontro la aventura")
@@ -17,6 +15,7 @@ async function loadAll() {
   cargarDatosRecorrido(aventura);
 }
 loadAll();
+
 
 
 
